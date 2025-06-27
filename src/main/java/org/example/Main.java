@@ -27,7 +27,7 @@ public class Main {
 
 
 		// Comando de inserir pessoa
-		pDao.inserir(new Pessoa("Jonelson","Jonel@gmail.com"));
+		//pDao.inserir(new Pessoa("Jonelson","Jonel@gmail.com"));
 
 		// Comando de deletar por id
 		//pDao.deletar(2);
