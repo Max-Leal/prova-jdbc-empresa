@@ -1,50 +1,50 @@
 package org.example.models;
 
-
+// Classe Funcionario herdado de Pessoa
 public class Funcionario extends Pessoa {
 
-    private String matricula;
-    private String departamento;
+	// atributos
+	private String matricula;
+	private String departamento;
 
-    public Funcionario() {
+	// construtores padrão, sem id e com id
+	public Funcionario() {
 
-    }
+	}
 
-    public Funcionario(String nome, String email, String matricula, String departamento) {
-        super(nome, email);
-        this.matricula = matricula;
-        this.departamento = departamento;
-    }
+	public Funcionario(String nome, String email, String matricula, String departamento) {
+		super(nome, email);
+		this.matricula = matricula;
+		this.departamento = departamento;
+	}
 
+	public Funcionario(int id, String nome, String email, String matricula, String departamento) {
+		super(id, nome, email);
+		this.matricula = matricula;
+		this.departamento = departamento;
+	}
 
+	// getters e setters
+	public String getMatricula() {
+		return matricula;
+	}
 
-    public Funcionario(int id, String nome, String email, String matricula, String departamento) {
-        super(id, nome, email);
-        this.matricula = matricula;
-        this.departamento = departamento;
-    }
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
+	}
 
-    public String getMatricula() {
-        return matricula;
-    }
+	public String getDepartamento() {
+		return departamento;
+	}
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
 
-    public String getDepartamento() {
-        return departamento;
-    }
-
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
-
-    @Override
-    public String toString() {
-        return "Pessoa [id=" + super.getId() + ", nome=" + super.getNome() + ", email=" + super.getEmail()
-                + "] Funcionario [matricula=" + matricula + ", departamento=" + departamento + "]";
-    }
+	@Override
+	public String toString() {
+		return "Funcionario id = " + super.getId() + ", nome = " + super.getNome() + ", email = " + super.getEmail()
+				+ ", matricula = " + matricula + ", departamento = " + departamento;
+	}
 
 }
-
