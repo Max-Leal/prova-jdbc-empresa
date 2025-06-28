@@ -5,8 +5,10 @@ import java.util.Scanner;
 
 import org.example.daos.FuncionarioDao;
 import org.example.daos.PessoaDao;
+import org.example.daos.ProjetoDao;
 import org.example.models.Funcionario;
 import org.example.models.Pessoa;
+import org.example.models.Projeto;
 
 public class Main {
 	public static void main(String[] args) {
@@ -14,6 +16,7 @@ public class Main {
 		// DAO
 		PessoaDao pDao = new PessoaDao();
 		FuncionarioDao fDao = new FuncionarioDao();
+		ProjetoDao projetoDao = new ProjetoDao();
 
 		// Scanner
 		Scanner sc = new Scanner(System.in);
@@ -221,7 +224,88 @@ public class Main {
 			}
 
 			case 3: {
-				// A implementar: funcionalidades para Projeto
+				System.out.println("------------------------------------------");
+				System.out.println(
+						"Escolha a operação a ser feita com projeto:\n1 - Listar\n2 - Inserir\n3 - Atualizar\n4 - Buscar por id\n5 - Deletar");
+				System.out.println("------------------------------------------");
+				int respProj = sc.nextInt();
+				sc.nextLine(); // Limpar quebra de linha
+
+				while (respProj < 1 || respProj > 5) {
+					System.out.println("Por favor escolha entre uma das opções");
+					respProj = sc.nextInt();
+					sc.nextLine();
+				}
+
+				switch (respProj) {
+
+				// LISTAR
+				case 1: {
+					List<Projeto> lista = projetoDao.listarTodos();
+					System.out.println("Projetos cadastrados: " + lista.size());
+					for (Projeto p : lista) {
+						System.out.println(p);
+					}
+					break;
+				}
+
+				// INSERIR
+				case 2: {
+					System.out.print("Nome do projeto: ");
+					String nome = sc.nextLine();
+					System.out.print("Descrição: ");
+					String desc = sc.nextLine();
+					System.out.print("ID do funcionário responsável: ");
+					int idFunc = sc.nextInt();
+					sc.nextLine(); // Limpar
+
+					Projeto novo = new Projeto(nome, desc, idFunc);
+					projetoDao.inserir(novo);
+					break;
+				}
+
+				// ATUALIZAR
+				case 3: {
+					System.out.print("ID do projeto a ser alterado: ");
+					int idAlt = sc.nextInt();
+					sc.nextLine();
+					System.out.print("Novo nome: ");
+					String nome = sc.nextLine();
+					System.out.print("Nova descrição: ");
+					String desc = sc.nextLine();
+					System.out.print("Novo ID do funcionário responsável: ");
+					int idFunc = sc.nextInt();
+					sc.nextLine();
+
+					Projeto atualizado = new Projeto(nome, desc, idFunc);
+					projetoDao.atualizar(idAlt, atualizado);
+					break;
+				}
+
+				// BUSCAR POR ID
+				case 4: {
+					System.out.print("ID do projeto a ser buscado: ");
+					int idBusca = sc.nextInt();
+					sc.nextLine();
+					Projeto encontrado = projetoDao.buscarPorId(idBusca);
+
+					if (encontrado == null) {
+						System.out.println("Nenhum projeto encontrado com ID " + idBusca);
+					} else {
+						System.out.println(encontrado);
+					}
+					break;
+				}
+
+				// DELETAR
+				case 5: {
+					System.out.print("ID do projeto a ser deletado: ");
+					int idDel = sc.nextInt();
+					sc.nextLine();
+					projetoDao.deletar(idDel);
+					break;
+				}
+				}
 				break;
 			}
 

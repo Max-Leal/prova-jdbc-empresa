@@ -113,25 +113,48 @@ public class FuncionarioDao {
 
 	// DELETE (remover somente da tabela funcionario, manter na tabela pessoa)
 	public void deletar(int id) {
-		String sqlFuncionario = "DELETE FROM funcionario WHERE id = ?";
+	    Connection conn = null;
 
-		try {
-			Connection conn = Conexao.getConexao();
-			PreparedStatement stmtFunc = conn.prepareStatement(sqlFuncionario);
-			stmtFunc.setInt(1, id);
-			int linhasAfetadas = stmtFunc.executeUpdate();
+	    try {
+	        // Verifica se o funcionário está vinculado a algum projeto
+	        ProjetoDao projetoDao = new ProjetoDao();
+	        int totalProjetos = projetoDao.contarProjetosPorFuncionario(id);
 
-			if (linhasAfetadas > 0) {
-				System.out.println("Funcionário removido com sucesso (a pessoa foi mantida no sistema).");
-			} else {
-				System.out.println("Nenhum funcionário encontrado com o ID informado.");
-			}
+	        if (totalProjetos > 0) {
+	            System.out.println("Erro: este funcionário está vinculado a " + totalProjetos +
+	                    " projeto(s) e não pode ser deletado.");
+	            return;
+	        }
 
-		} catch (SQLIntegrityConstraintViolationException e) {
-			System.out.println("Erro: funcionário vinculado a projeto e não pode ser excluído.");
-			System.out.println("Log: " + e.getMessage());
-		} catch (SQLException e) {
-			System.out.println("Erro ao remover funcionário: " + e.getMessage());
-		}
+	        conn = Conexao.getConexao();
+	        conn.setAutoCommit(false);
+
+	        // Remove da tabela de funcionario, mas mantém em pessoa
+	        String sqlFuncionario = "DELETE FROM funcionario WHERE id = ?";
+	        PreparedStatement stmtFunc = conn.prepareStatement(sqlFuncionario);
+	        stmtFunc.setInt(1, id);
+	        int rows = stmtFunc.executeUpdate();
+
+	        if (rows > 0) {
+	            conn.commit();
+	            System.out.println("Funcionário removido com sucesso (pessoa mantida).");
+	        } else {
+	            System.out.println("Funcionário não encontrado com ID " + id);
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Erro ao deletar funcionário: " + e.getMessage());
+	        try {
+	            if (conn != null) conn.rollback();
+	        } catch (SQLException ex) {
+	            System.out.println("Erro ao fazer rollback: " + ex.getMessage());
+	        }
+	    } finally {
+	        try {
+	            if (conn != null) conn.close();
+	        } catch (SQLException e) {
+	            System.out.println("Erro ao fechar conexão: " + e.getMessage());
+	        }
+	    }
 	}
 }
